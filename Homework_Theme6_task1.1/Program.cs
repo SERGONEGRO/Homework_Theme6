@@ -176,6 +176,7 @@ namespace Homework_Theme6_task1._1
         /// <param name="output">исходящий файл</param>
         static void CreateZipFile (string input,string output)
         {
+            Console.WriteLine("Запуск архивации...");
             DateTime dateBegin = DateTime.Now;
 
             using (FileStream ss = new FileStream(input, FileMode.OpenOrCreate))
@@ -186,9 +187,9 @@ namespace Homework_Theme6_task1._1
                     using (GZipStream cs = new GZipStream(ts, CompressionMode.Compress))
                     {
                         ss.CopyTo(cs); // копируем байты из одного потока в другой
-                        Console.WriteLine("Сжатие файла завершено. Было: {1} байт  стало: {2} байт.",
-                                          ss.Length*2,
-                                          ts.Length*2 );
+                        //Console.WriteLine("Сжатие файла завершено. Было: {1} байт  стало: {2} байт.",
+                        //                  ss.Length*2,
+                        //                  ts.Length*2 );
                     }
                 }
             }
