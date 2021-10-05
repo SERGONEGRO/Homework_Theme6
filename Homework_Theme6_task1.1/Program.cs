@@ -39,6 +39,7 @@ namespace Homework_Theme6_task1._1
                 }
                 
             }
+            Console.ReadKey();
                
 
         }
@@ -128,9 +129,9 @@ namespace Homework_Theme6_task1._1
                     using (GZipStream cs = new GZipStream(ts, CompressionMode.Compress))
                     {
                         ss.CopyTo(cs); // копируем байты из одного потока в другой
-                        //Console.WriteLine("Сжатие файла завершено. Было: {1} байт  стало: {2} байт.",
-                        //                  ss.Length*2,
-                        //                  ts.Length*2 );
+                        Console.WriteLine("Сжатие файла завершено. Было: {0} байт  стало: {1} байт.",
+                                          ss.Length * 2,
+                                          ts.Length * 2);
                     }
                 }
             }
