@@ -7,17 +7,30 @@ namespace Homework_Theme6_task1._1
 {
     class Program
     {
-        static string source = @"e:\Theme6_Number.txt";
-        static string groupFile = @"e:\Theme6_Groups.txt";
-        static string zipFile = @"e:\Theme6_Groups.txt.zip";
+        static string source = @"\Theme6_Number.txt";
+        static string groupFile = @"\Theme6_Groups.txt";
+        static string zipFile = @"\Theme6_Groups.txt.zip";
+        static string dir = @"C:\\papka";
 
         static void Main(string[] args)
         {
-            int n = EnterNumber(1, 1000000000);   //ввод числа от 1 до миллиарда
+            Console.WriteLine($"Введите папку для хранения файлов, например:{dir}");
+            dir = Console.ReadLine();
+            if (Directory.Exists(dir)==false) Directory.CreateDirectory(dir);
+
+            //обновляем пути до папки
+            source = dir + source;
+            groupFile = dir + groupFile;
+            zipFile = dir + zipFile;
+
+            //ввод числа от 1 до миллиарда
+            Console.WriteLine("Введите количество чисел от 1 до 1_000_000_000");
+            int n = EnterNumber(1, 1000000000);   
             Console.WriteLine("Кол-во чисел определено.\n");
 
             Console.WriteLine("Создание файла...\n");
             CreateNumberFile(n,source);
+            Console.WriteLine($"Файл c числом {source} создан.\n");
 
             //определяем кол-во групп
             var groupCount = Math.Ceiling(Math.Log(n, 2));
@@ -30,12 +43,28 @@ namespace Homework_Theme6_task1._1
 
             else
             {   //создаем файл с группами
+                DateTime dateBegin = DateTime.Now;
+                Console.WriteLine("Создание файла с группами...\n");
+
                 CreateGroupsFile(n);
-                
+
+                DateTime dateEnd = DateTime.Now;
+                TimeSpan secs = dateEnd - dateBegin;
+
+                Console.WriteLine($"Файл {groupFile} создан за {secs.TotalSeconds:0.00} секунд. \n");
+
                 Console.WriteLine("\nЕсли желаете заархивировать файл с группами, нажмите '1':\n");
                 if (Console.ReadLine().Equals("1"))
                 {
+                    Console.WriteLine("Запуск архивации...");
+
+                    dateBegin = DateTime.Now;
                     CreateZipFile(groupFile ,zipFile);
+
+                    dateEnd = DateTime.Now;
+                    secs = dateEnd - dateBegin;
+
+                    Console.WriteLine($"Файл {zipFile} создан за {secs.TotalSeconds:0.00} секунд. \n");
                 }
                 
             }
@@ -50,7 +79,6 @@ namespace Homework_Theme6_task1._1
         /// <returns>число</returns>
         static int EnterNumber(int min, int max)
         {
-            Console.WriteLine("Введите количество чисел от 1 до 1_000_000_000");
             string s = Console.ReadLine();
 
             int number;
@@ -71,15 +99,15 @@ namespace Homework_Theme6_task1._1
         /// Создание файла с заданным числом
         /// </summary>
         /// <param name="number">Количество чисел в файле</param>
-        static void CreateNumberFile(int number, string path)
+        static string CreateNumberFile(int number, string path)
         {
             StringBuilder sb = new StringBuilder(number); 
 
             sb.Append(number);
             //запись числа в файл
             File.WriteAllText(path, sb.ToString());
-
-            Console.WriteLine($"Файл c числом {sb} создан.\n");
+            return sb.ToString();
+            
         }
         
 
@@ -89,9 +117,6 @@ namespace Homework_Theme6_task1._1
         /// <param name="n">Число N</param>
         static void CreateGroupsFile (int n)
         {
-            Console.WriteLine("Создание файла с группами...\n");
-            DateTime dateBegin = DateTime.Now;
-
             StringBuilder sb = new StringBuilder(n);
             int groupnumber = 1;
 
@@ -105,10 +130,6 @@ namespace Homework_Theme6_task1._1
             //запись массива чисел в строку
             File.WriteAllText(groupFile, sb.ToString());
 
-            DateTime dateEnd = DateTime.Now;
-            TimeSpan secs = dateEnd - dateBegin;
-
-            Console.WriteLine($"Файл {groupFile} создан за {secs.TotalSeconds:0.00} секунд. \n");
         }
 
         /// <summary>
@@ -118,9 +139,6 @@ namespace Homework_Theme6_task1._1
         /// <param name="output">исходящий файл</param>
         static void CreateZipFile (string input,string output)
         {
-            Console.WriteLine("Запуск архивации...");
-            DateTime dateBegin = DateTime.Now;
-
             using (FileStream ss = new FileStream(input, FileMode.OpenOrCreate))
             {
                 using (FileStream ts = File.Create(output))   // поток для записи сжатого файла
@@ -136,13 +154,8 @@ namespace Homework_Theme6_task1._1
                 }
             }
 
-            DateTime dateEnd = DateTime.Now;
-            TimeSpan secs = dateEnd - dateBegin;
-
-            Console.WriteLine($"Файл {output} создан за {secs.TotalSeconds:0.00} секунд. \n");
+           
         }
-
-        
 
     }
 }
